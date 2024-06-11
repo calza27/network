@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-die() { echo ${1:-argh} exit ${2:-1}; }
+die() { echo "${1:-argh}"; exit ${2:-1}; }
 
 hash aws || die "aws not found."
 hash ./bin/parse-yaml.sh || die "parse-yaml.sh not found."

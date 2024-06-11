@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-die() { echo ${1:-argh} exit ${2:-1}; }
+die() { echo "${1:-argh}"; exit ${2:-1}; }
 
 hash yq || die "yq not found. Install it with 'brew install yq'"
 
