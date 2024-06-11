@@ -13,7 +13,7 @@ tags=$(./bin/parse-yaml.sh ./params/tags.yml)
 
 aws cloudformation deploy \
     --capabilities "CAPABILITY_NAMED_IAM" "CAPABILITY_AUTO_EXPAND" \
-    --s3-bucket "cfn-templates-390315154367" \
+    --s3-bucket "cfn-templates-3903---4367" \
     --s3-prefix "$STACK_NAME" \
     --stack-name "$STACK_NAME" \
     --template-file "./cf/net.yml" \
