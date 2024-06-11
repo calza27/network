@@ -17,6 +17,6 @@ aws cloudformation deploy \
     --s3-prefix "$STACK_NAME" \
     --stack-name "$STACK_NAME" \
     --template-file "./cf/net.yml" \
-    --parameter-overrides "$params" \
-    --tags "$tags" \
+    --parameter-overrides "[$params]" \
+    --tags "[$tags]" \
     --profile "$profile" || die "failed to deploy stack "$STACK_NAME""
