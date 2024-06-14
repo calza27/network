@@ -266,3 +266,43 @@ Resources:
       Name: /network/appCidr
       Type: String
       Value: !Ref appCidr
+
+  dynamoDbVPCEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: !Ref vpc
+      VpcEndpointType: Interface
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.dynamodb"
+      SubnetIds:
+        - !Ref appSubnetA
+        - !Ref appSubnetB
+        - !Ref appSubnetC
+      PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Principal: "*"
+              Action:
+                - "dynamodb:*"
+              Resource:
+                - "*"
+
+  ssmVPCEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: !Ref vpc
+      VpcEndpointType: Interface
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.ssm"
+      SubnetIds:
+        - !Ref appSubnetA
+        - !Ref appSubnetB
+        - !Ref appSubnetC
+      PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Principal: "*"
+              Action:
+                - "ssm:*"
+              Resource:
+                - "*"
