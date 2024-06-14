@@ -277,6 +277,10 @@ Resources:
         - !Ref appSubnetA
         - !Ref appSubnetB
         - !Ref appSubnetC
+      RouteTableIds:
+        - !Ref routeTableAppA
+        - !Ref routeTableAppB
+        - !Ref routeTableAppC
       PolicyDocument:
           Version: 2012-10-17
           Statement:
@@ -297,6 +301,10 @@ Resources:
         - !Ref appSubnetA
         - !Ref appSubnetB
         - !Ref appSubnetC
+      RouteTableIds:
+        - !Ref routeTableAppA
+        - !Ref routeTableAppB
+        - !Ref routeTableAppC
       PolicyDocument:
           Version: 2012-10-17
           Statement:
