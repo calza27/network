@@ -273,10 +273,6 @@ Resources:
       VpcId: !Ref vpc
       VpcEndpointType: Gateway
       ServiceName: !Sub "com.amazonaws.${AWS::Region}.dynamodb"
-      # SubnetIds:
-      #   - !Ref appSubnetA
-      #   - !Ref appSubnetB
-      #   - !Ref appSubnetC
       RouteTableIds:
         - !Ref routeTableAppA
         - !Ref routeTableAppB
@@ -287,7 +283,27 @@ Resources:
             - Effect: Allow
               Principal: "*"
               Action:
-                - "dynamodb:*"
+                - "*"
+              Resource:
+                - "*"
+
+  s3VPCEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: !Ref vpc
+      VpcEndpointType: Gateway
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.s3"
+      RouteTableIds:
+        - !Ref routeTableAppA
+        - !Ref routeTableAppB
+        - !Ref routeTableAppC
+      PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Principal: "*"
+              Action:
+                - "*"
               Resource:
                 - "*"
 
@@ -307,6 +323,46 @@ Resources:
             - Effect: Allow
               Principal: "*"
               Action:
-                - "ssm:*"
+                - "*"
+              Resource:
+                - "*"
+
+  ec2MessagesVPCEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: !Ref vpc
+      VpcEndpointType: Interface
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.ec2messages"
+      SubnetIds:
+        - !Ref appSubnetA
+        - !Ref appSubnetB
+        - !Ref appSubnetC
+      PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Principal: "*"
+              Action:
+                - "*"
+              Resource:
+                - "*"
+
+  ec2VPCEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: !Ref vpc
+      VpcEndpointType: Interface
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.ec2"
+      SubnetIds:
+        - !Ref appSubnetA
+        - !Ref appSubnetB
+        - !Ref appSubnetC
+      PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Principal: "*"
+              Action:
+                - "*"
               Resource:
                 - "*"
