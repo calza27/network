@@ -271,12 +271,12 @@ Resources:
     Type: AWS::EC2::VPCEndpoint
     Properties:
       VpcId: !Ref vpc
-      VpcEndpointType: Interface
+      VpcEndpointType: Gateway
       ServiceName: !Sub "com.amazonaws.${AWS::Region}.dynamodb"
-      SubnetIds:
-        - !Ref appSubnetA
-        - !Ref appSubnetB
-        - !Ref appSubnetC
+      # SubnetIds:
+      #   - !Ref appSubnetA
+      #   - !Ref appSubnetB
+      #   - !Ref appSubnetC
       RouteTableIds:
         - !Ref routeTableAppA
         - !Ref routeTableAppB
@@ -301,10 +301,6 @@ Resources:
         - !Ref appSubnetA
         - !Ref appSubnetB
         - !Ref appSubnetC
-      RouteTableIds:
-        - !Ref routeTableAppA
-        - !Ref routeTableAppB
-        - !Ref routeTableAppC
       PolicyDocument:
           Version: 2012-10-17
           Statement:
