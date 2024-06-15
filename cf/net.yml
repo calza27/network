@@ -267,6 +267,24 @@ Resources:
       Type: String
       Value: !Ref appCidr
 
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for vpc endpoints
+      VpcId: !Ref vpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: !Ref cidr
+          Description: Allow all traffic on port 443 from the VPC
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+          Description: Allow all traffic on port 443
+
   dynamoDbVPCEndpoint:
     Type: AWS::EC2::VPCEndpoint
     Properties:
@@ -311,58 +329,39 @@ Resources:
     Type: AWS::EC2::VPCEndpoint
     Properties:
       VpcId: !Ref vpc
+      PrivateDnsEnabled: false
       VpcEndpointType: Interface
       ServiceName: !Sub "com.amazonaws.${AWS::Region}.ssm"
       SubnetIds:
         - !Ref appSubnetA
         - !Ref appSubnetB
         - !Ref appSubnetC
+      SecurityGroupIds:
+        - !GetAtt SecurityGroup.GroupId
       PolicyDocument:
           Version: 2012-10-17
           Statement:
             - Effect: Allow
               Principal: "*"
               Action:
-                - "*"
+                - "ssm:*"
               Resource:
                 - "*"
-
-  ec2MessagesVPCEndpoint:
-    Type: AWS::EC2::VPCEndpoint
+  ssmPHZ:
+    Type: AWS::Route53::HostedZone
     Properties:
-      VpcId: !Ref vpc
-      VpcEndpointType: Interface
-      ServiceName: !Sub "com.amazonaws.${AWS::Region}.ec2messages"
-      SubnetIds:
-        - !Ref appSubnetA
-        - !Ref appSubnetB
-        - !Ref appSubnetC
-      PolicyDocument:
-          Version: 2012-10-17
-          Statement:
-            - Effect: Allow
-              Principal: "*"
-              Action:
-                - "*"
-              Resource:
-                - "*"
+      Name: !Sub ssm.${AWS::Region}.amazonaws.com
+      VPCs:
+        - 
+          VPCId: !Ref vpc
+          VPCRegion: !Sub ${AWS::Region}
 
-  ec2VPCEndpoint:
-    Type: AWS::EC2::VPCEndpoint
+  ssmRecordSet:
+    Type: AWS::Route53::RecordSet
     Properties:
-      VpcId: !Ref vpc
-      VpcEndpointType: Interface
-      ServiceName: !Sub "com.amazonaws.${AWS::Region}.ec2"
-      SubnetIds:
-        - !Ref appSubnetA
-        - !Ref appSubnetB
-        - !Ref appSubnetC
-      PolicyDocument:
-          Version: 2012-10-17
-          Statement:
-            - Effect: Allow
-              Principal: "*"
-              Action:
-                - "*"
-              Resource:
-                - "*"
+      HostedZoneId: !Ref ssmPHZ
+      Name: !Sub ssm.${AWS::Region}.amazonaws.com
+      Type: A
+      AliasTarget:
+        DNSName: !Select ['1', !Split [':', !Select ['0', !GetAtt ssmVPCEndpoint.DnsEntries]]]
+        HostedZoneId: !Select ['0', !Split [':', !Select ['0', !GetAtt ssmVPCEndpoint.DnsEntries]]]
