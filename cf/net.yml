@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: pricing network resources
+Description: network resources
 
 Parameters:
   cidr:
